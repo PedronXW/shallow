@@ -1,0 +1,43 @@
+services:
+
+  shallow:
+    build: .
+    container_name: shallow
+    restart: always
+    ports: 
+      - 3333:3333
+    depends_on:
+      - neo4j
+    links:
+      - neo4j
+    environment:
+      DATABASE_URL: postgres://postgres:docker@pg:5432/db
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: secret
+      RESET_PASSWORD_SECRET: reset_password_secret
+      SENTRY_DSN: 
+      SENTRY_ENABLED: false
+    volumes:
+      - .:/app
+
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/teste123
+    volumes:
+      - ./data/neo4j_data:/data/neo4j_data
+
+  pg:
+    image: postgres:16.2
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: db
+    volumes:
+      - ./data/pg:/data/postgres
