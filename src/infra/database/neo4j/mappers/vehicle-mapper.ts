@@ -15,7 +15,7 @@ export class VehicleMapper {
 
   static toPersistence(vehicle: Vehicle): Record<string, any> {
     return {
-      id: vehicle.id.toString(),
+      id: vehicle.id.getValue(),
       plate: vehicle.plate,
       owner: vehicle.owner,
       previousOwners: vehicle.previousOwners,

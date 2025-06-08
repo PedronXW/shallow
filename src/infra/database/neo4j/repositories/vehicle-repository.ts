@@ -147,28 +147,34 @@ export class Neo4jVehicleRepository extends VehicleRepository {
     }
   }
 
-  async connectToPerson(vehicleId: string, personId: string): Promise<void> {
-    const session = this.getSession();
-    try {
-      await session.run(
-        `
-        MATCH (v:Vehicle {id: $vehicleId}), (p:Person {id: $personId})
-        MERGE (p)-[:OWNS]->(v)
-        `,
-        { vehicleId, personId }
-      );
-    } finally {
-      await session.close();
-    }
+  async connectToPerson(vehicleId: string, personId: string, type: string): Promise<void> {
+  const session = this.getSession();
+
+  // Validação básica: relacionamentos devem ser em UPPER_SNAKE_CASE
+  const validRelType = /^[A-Z][A-Z0-9_]*$/;
+  if (!validRelType.test(type)) {
+    throw new Error(`Tipo de relacionamento inválido: ${type}`);
   }
 
-  async connectToConsult(vehicleId: string, consultId: string): Promise<void> {
+  const query = `
+    MATCH (v:Vehicle {id: $vehicleId}), (p:Person {id: $personId})
+    MERGE (p)-[r:${type}]->(v)
+  `;
+
+  try {
+    await session.run(query, { vehicleId, personId });
+  } finally {
+    await session.close();
+  }
+}
+
+  async connectToConsult(vehicleId: string, consultId: string, type: string): Promise<void> {
     const session = this.getSession();
     try {
       await session.run(
         `
         MATCH (v:Vehicle {id: $vehicleId}), (c:Consult {id: $consultId})
-        MERGE (v)-[:INVOLVED_IN]->(c)
+        MERGE (c)-[:${type}]->(v)
         `,
         { vehicleId, consultId }
       );

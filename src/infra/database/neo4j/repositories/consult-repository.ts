@@ -26,14 +26,15 @@ export class Neo4jConsultRepository extends ConsultRepository {
     }
   }
 
-  async updateConsult(id: string, updates: Partial<Consult>): Promise<Consult> {
+  async updateConsult(id: string, updates: Consult): Promise<Consult> {
     const session = this.getSession();
-    const updateEntries = Object.keys(updates)
-      .map((k) => `c.${k} = $${k}`)
+    
+    const updateEntries = Object.entries(ConsultMapper.toPersistence(updates))
+      .map(([key, value]) => `c.${key} = $${key}`)
       .join(', ');
 
     const updateParams = Object.fromEntries(
-      Object.entries(updates).map(([k, v]) => [k, v])
+      Object.entries(ConsultMapper.toPersistence(updates)).map(([key, value]) => [`${key}`, value])
     );
 
     try {

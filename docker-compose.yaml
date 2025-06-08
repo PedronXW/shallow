@@ -17,6 +17,9 @@ services:
       RESET_PASSWORD_SECRET: reset_password_secret
       SENTRY_DSN: 
       SENTRY_ENABLED: false
+      POWERTRAIN_API_URL: http://172.17.0.1:3006
+      POWERTRAIN_API_KEY: 7c9ba144-ab97-49a4-82cd-a8a3342f90f3
+      POWERTRAIN_NOTIFICATION_URL: http://localhost:3333/consult/receive
     volumes:
       - .:/app
 
@@ -34,7 +37,7 @@ services:
   pg:
     image: postgres:16.2
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker

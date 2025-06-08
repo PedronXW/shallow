@@ -121,13 +121,13 @@ export class Neo4jPersonRepository extends PersonRepository {
     }
   }
 
-  async connectToVehicle(personId: string, vehicleId: string): Promise<void> {
+  async connectToVehicle(personId: string, vehicleId: string, type: string): Promise<void> {
     const session = this.getSession();
     try {
       await session.run(
         `
         MATCH (p:Person {id: $personId}), (v:Vehicle {id: $vehicleId})
-        MERGE (p)-[:OWNS]->(v)
+        MERGE (p)-[:${type}]->(v)
         `,
         { personId, vehicleId }
       );
@@ -136,13 +136,13 @@ export class Neo4jPersonRepository extends PersonRepository {
     }
   }
 
-  async connectToConsult(personId: string, consultId: string): Promise<void> {
+  async connectToConsult(personId: string, consultId: string, type: string): Promise<void> {
     const session = this.getSession();
     try {
       await session.run(
         `
         MATCH (p:Person {id: $personId}), (c:Consult {id: $consultId})
-        MERGE (p)-[:PARTICIPATED_IN]->(c)
+        MERGE (p)-[:${type}]->(c)
         `,
         { personId, consultId }
       );

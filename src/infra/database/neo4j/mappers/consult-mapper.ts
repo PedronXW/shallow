@@ -6,8 +6,8 @@ export class ConsultMapper {
     return Consult.create(
       {
         type: raw.type,
-        input: raw.input,
-        output: raw.output, // pode ser undefined
+        input: JSON.parse(raw.input),
+        output: raw.output ? JSON.parse(raw.output): undefined,
       },
       new EntityId(raw.id),
     );
@@ -15,10 +15,10 @@ export class ConsultMapper {
 
   static toPersistence(consult: Consult): Record<string, any> {
     return {
-      id: consult.id.toString(),
+      id: consult.id.getValue(),
       type: consult.type,
-      input: consult.input,
-      output: consult.output,
+      input: JSON.stringify(consult.input),
+      output: JSON.stringify(consult.output),
     };
   }
 }

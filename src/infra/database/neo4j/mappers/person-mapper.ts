@@ -13,7 +13,7 @@ export class PersonMapper {
 
   static toPersistence(person: Person): Record<string, any> {
     return {
-      id: person.id.toString(),
+      id: person.id.getValue(),
       identification: person.identification,
     };
   }

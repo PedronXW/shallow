@@ -12,6 +12,6 @@ export abstract class PersonRepository {
   abstract findPersonById(id: string): Promise<Person | undefined>;
   abstract findPersonByIdentification(plate: string): Promise<Person | undefined>;
   abstract findAll(skip?: number, limit?: number): Promise<FindPersonsResponse>;
-  abstract connectToVehicle(personId: string, vehicleId: string): Promise<void>;
-  abstract connectToConsult(personId: string, consultId: string): Promise<void>;
+  abstract connectToVehicle(personId: string, vehicleId: string, type: string): Promise<void>;
+  abstract connectToConsult(personId: string, consultId: string, type: string): Promise<void>;
 }
